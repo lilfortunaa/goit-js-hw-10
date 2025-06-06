@@ -43,16 +43,20 @@ const options = {
 flatpickr('#datetime-picker', options);
 
 class Timer {
+  constructor() {
+    this.timerId = null;
+  }
   start() {
-    if (!userSelectedDate) return;
+    if (!userSelectedDate || this.timerId) return;
     startBtn.disabled = true;
 
-    setInterval(() => {
+    this.timerId = setInterval(() => {
       const currentTime = Date.now();
       const deltaTime = userSelectedDate - currentTime;
 
       if (deltaTime <= 0) {
-        clearInterval(timerId);
+        clearInterval(this.timerId);
+        this.timerId = null;
         this.updateDisplay({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
         iziToast.success({
