@@ -2,6 +2,25 @@
   width: 272px;
   height: 40px;
   gap: 8px;
+  border: 1px solid #ccc;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.timer-input:hover {
+  border-color: #333;
+}
+
+.timer-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 1px #3b82f6;
+}
+
+.timer-input:disabled {
+  background-color: #f5f5f5;
+  color: #999;
+  border-color: #ddd;
+  cursor: not-allowed;
 }
 
 .timer {
@@ -20,4 +39,39 @@
   width: 75px;
   height: 40px;
   background-color: #cfcfcf;
+  color: white;
+  border: none;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.start-btn:hover:not(:disabled) {
+  background-color: #2563eb;
+}
+
+.start-btn:disabled {
+  background-color: #d1d5db;
+  color: #888;
+  cursor: not-allowed;
+}
+
+.back-button {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  text-decoration: none;
+  padding: 6px 10px;
+  background-color: #eee;
+  border-radius: 4px;
+  color: #333;
+  font-weight: bold;
+  z-index: 1000;
+}
+
+.content {
+  padding-top: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-left: 10px;
+  gap: 10px;
 }
