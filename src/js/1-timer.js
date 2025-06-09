@@ -1,21 +1,18 @@
 import flatpickr from 'flatpickr';
-
 import 'flatpickr/dist/flatpickr.min.css';
 
 import iziToast from 'izitoast';
-
 import 'izitoast/dist/css/iziToast.min.css';
 
-const startBtn = document.querySelector('button[data-start]');
+const startBtn = document.querySelector('[data-start]');
+const dateInput = document.querySelector('#datetime-picker');
 const daysSpan = document.querySelector('[data-days]');
 const hoursSpan = document.querySelector('[data-hours]');
 const minutesSpan = document.querySelector('[data-minutes]');
 const secondsSpan = document.querySelector('[data-seconds]');
 
 startBtn.disabled = true;
-
-let userSelectedDate;
-let timerId;
+let userSelectedDate = null;
 
 const options = {
   enableTime: true,
@@ -24,9 +21,9 @@ const options = {
   minuteIncrement: 1,
   onClose(selectedDates) {
     const selectedDate = selectedDates[0];
-    const currentDate = new Date();
+    const now = new Date();
 
-    if (selectedDate <= currentDate) {
+    if (selectedDate <= now) {
       iziToast.error({
         title: 'Error',
         message: 'Please choose a date in the future',
@@ -40,23 +37,27 @@ const options = {
   },
 };
 
-flatpickr('#datetime-picker', options);
+flatpickr(dateInput, options);
 
 class Timer {
   constructor() {
     this.timerId = null;
   }
+
   start() {
     if (!userSelectedDate || this.timerId) return;
+
     startBtn.disabled = true;
+    dateInput.disabled = true;
 
     this.timerId = setInterval(() => {
-      const currentTime = Date.now();
-      const deltaTime = userSelectedDate - currentTime;
+      const now = Date.now();
+      const timeLeft = userSelectedDate - now;
 
-      if (deltaTime <= 0) {
+      if (timeLeft <= 0) {
         clearInterval(this.timerId);
         this.timerId = null;
+
         this.updateDisplay({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
         iziToast.success({
@@ -64,10 +65,14 @@ class Timer {
           message: 'Timer completed!',
           position: 'topRight',
         });
+
+        dateInput.disabled = false;
+        startBtn.disabled = true;
+
         return;
       }
 
-      const time = this.convertMs(deltaTime);
+      const time = this.convertMs(timeLeft);
       this.updateDisplay(time);
     }, 1000);
   }
@@ -95,5 +100,4 @@ class Timer {
 }
 
 const timer = new Timer();
-
-startBtn.addEventListener('click', timer.start.bind(timer));
+startBtn.addEventListener('click', () => timer.start());
